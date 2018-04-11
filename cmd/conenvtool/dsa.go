@@ -95,9 +95,11 @@ func gendsa() {
 	var (
 		embed bool
 		size  int
+		file  string
 	)
 	flag.BoolVar(&embed, "embed", false, "generate codes to embed pubic key in your program instead")
 	flag.IntVar(&size, "size", 2, "parameter size. valid values are 0: L1024N160, 1: L2048N224, 2: L2048N256, 3: L3072N256")
+	flag.StringVar(&file, "f", "", "also output example code to a file")
 	flag.Parse()
 
 	validSize := map[int]dsa.ParameterSizes{
@@ -143,6 +145,13 @@ func gendsa() {
 		code = fmt.Sprintf(dsaembed, buf.Bytes())
 	}
 	fmt.Println(code)
+
+	if file != "" {
+		log.Printf("Writing example code to %s...", file)
+		if err := ioutil.WriteFile(file, []byte(code), 0600); err != nil {
+			log.Fatalf("unexpected error: %s", err)
+		}
+	}
 }
 
 func dsasign() {

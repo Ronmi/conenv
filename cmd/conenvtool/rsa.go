@@ -7,6 +7,7 @@ import (
 	"encoding/gob"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -80,9 +81,11 @@ func genrsa() {
 	var (
 		bitSize int
 		embed   bool
+		file    string
 	)
 	flag.IntVar(&bitSize, "size", 2048, "key size in bit")
 	flag.BoolVar(&embed, "embed", false, "generate codes to embed private key in your program instead")
+	flag.StringVar(&file, "f", "", "also output example code to a file")
 	flag.Parse()
 
 	log.Print("Generating key pair...")
@@ -110,6 +113,13 @@ func genrsa() {
 		code = fmt.Sprintf(rsaembed, buf.Bytes())
 	}
 	fmt.Println(code)
+
+	if file != "" {
+		log.Printf("Writing example code to %s...", file)
+		if err := ioutil.WriteFile(file, []byte(code), 0600); err != nil {
+			log.Fatalf("unexpected error: %s", err)
+		}
+	}
 }
 
 func rsaenc() {
