@@ -42,7 +42,7 @@ const rsaembed = `
 var rsaPrivateKey *rsa.PrivateKey
 
 func init() {
-	rsPrivateKey = &rsa.PrivateKey{}
+	rsaPrivateKey = &rsa.PrivateKey{}
 	data := %#v
 	buf := bytes.NewBuffer(data)
 	dec := gob.NewDecoder(buf)
